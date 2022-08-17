@@ -54,13 +54,13 @@ const DoctorsList = () => {
 
               <div className="d-flex  align-items-center">
                 <div>
-                  <i class="fa fa-phone" aria-hidden="true"></i>
+                  <i className="fa fa-phone" aria-hidden="true"></i>
                   <span className="text-muted">
                     <span className="font-weight-bold ms-2">Voice Call</span>
                   </span>
                 </div>
                 <div className="mx-3 my-3">
-                  <i class="fa fa-video-camera" aria-hidden="true"></i>
+                  <i className="fa fa-video-camera" aria-hidden="true"></i>
                   <span className="text-muted">
                     <span className="font-weight-bold ms-2">Video Call</span>
                   </span>

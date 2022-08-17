@@ -1,7 +1,77 @@
-import React from "react"
+import axios from "axios"
+import React, { useContext } from "react"
 import { Card, Col, Row } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
+import { BASE_URL } from "../utils/constants"
+import { AuthContext } from "../utils/context"
 
 const RegisterScreen = () => {
+  const [user, setUser] = React.useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "",
+  })
+  const signIn = useContext(AuthContext).signIn
+
+  const navigate = useNavigate()
+
+  const handleChange = (e) => {
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value,
+    })
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!user.name) {
+      return alert("Name is required")
+    }
+    if (user.name.length < 3) {
+      return alert("Name must be at least 3 characters")
+    }
+    if (!user.email) {
+      return alert("Email is required")
+    }
+    if (!user.password) {
+      return alert("Password is required")
+    }
+    if (!user.confirmPassword) {
+      return alert("Confirm Password is required")
+    }
+    if (user.password !== user.confirmPassword) {
+      return alert("Passwords do not match")
+    }
+    if (user.password.length < 6) {
+      return alert("Password must be at least 6 characters")
+    }
+    if (!user.role) {
+      return alert("Role is required")
+    }
+
+    try {
+      const { data } = await axios.post(BASE_URL + "/user/register", {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        role: user.role,
+      })
+      if (data.msg === "Already Registered") {
+        alert("Already Registered. Please login")
+        return navigate("/login")
+      }
+      localStorage.setItem("token", data.token)
+      localStorage.setItem("user", JSON.stringify(data.user))
+      signIn(data.user)
+      alert(data.msg)
+      navigate("/")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div
       className="d-flex justify-content-center align-items-center "
@@ -14,13 +84,30 @@ const RegisterScreen = () => {
               Welcome to Health Screening
             </h3>
             <p className="text-center">Please login to continue</p>
-            <form>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group py-2">
+                <label htmlFor="nameInput " className="py-2">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={user.name}
+                  onChange={handleChange}
+                  className="form-control"
+                  id="nameInput"
+                  placeholder="Enter Name"
+                />
+              </div>
               <div className="form-group py-2">
                 <label htmlFor="exampleInputEmail1 " className="py-2">
                   Email address
                 </label>
                 <input
                   type="email"
+                  name="email"
+                  value={user.email}
+                  onChange={handleChange}
                   className="form-control"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
@@ -33,38 +120,57 @@ const RegisterScreen = () => {
                 </label>
                 <input
                   type="password"
+                  name="password"
+                  value={user.password}
+                  onChange={handleChange}
                   className="form-control"
                   id="exampleInputPassword1"
                   placeholder="Password"
                 />
               </div>
+              <div className="form-group py-1">
+                <label htmlFor="exampleInputPassword1" className="py-2">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={user.confirmPassword}
+                  onChange={handleChange}
+                  className="form-control"
+                  id="exampleInputPassword1"
+                  placeholder="Confirm Password"
+                />
+              </div>
               <div className="form-check form-check-inline py-2">
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="inlineRadioOptions"
+                  name="role"
                   id="inlineRadio1"
-                  value="option1"
+                  value="patient"
+                  onChange={handleChange}
                 />
                 <label className="form-check-label" for="inlineRadio1">
-                  Doctor
+                  Normal User
                 </label>
               </div>
               <div className="form-check form-check-inline py-2">
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="inlineRadioOptions"
+                  name="role"
                   id="inlineRadio2"
-                  value="option2"
+                  value="doctor"
+                  onChange={handleChange}
                 />
                 <label className="form-check-label" for="inlineRadio2">
-                  Normal User
+                  Doctor
                 </label>
               </div>
 
               <div className="d-grid gap-2 py-2">
-                <button className="btn btn-primary" type="button">
+                <button className="btn btn-primary" type="submit">
                   Register
                 </button>
               </div>

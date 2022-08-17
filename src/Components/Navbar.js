@@ -1,9 +1,8 @@
 import Button from "react-bootstrap/Button"
 import Container from "react-bootstrap/Container"
-import Form from "react-bootstrap/Form"
 import Nav from "react-bootstrap/Nav"
 import Navbar from "react-bootstrap/Navbar"
-import NavDropdown from "react-bootstrap/NavDropdown"
+import { Link } from "react-router-dom"
 
 function NavBar() {
   return (
@@ -18,10 +17,14 @@ function NavBar() {
             navbarScroll
           ></Nav>
 
-          <Button variant="outline-success" className="mx-2">
-            Login
-          </Button>
-          <Button variant="outline-danger">Signup</Button>
+          <Link to={"/login"}>
+            <Button variant="outline-success" className="mx-2">
+              Login
+            </Button>
+          </Link>
+          <Link to="/register">
+            <Button variant="outline-danger">Signup</Button>
+          </Link>
         </Navbar.Collapse>
       </Container>
     </Navbar>
