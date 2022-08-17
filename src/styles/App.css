@@ -1,0 +1,15 @@
+body {
+  font-family: "Poppins", sans-serif !important;
+  padding: 5px 10px !important;
+  margin: 0;
+}
+
+button {
+  font-family: "Poppins", sans-serif !important;
+  border-radius: 50px !important;
+  padding: 5px 10px;
+}
+
+.text-success {
+  color: #2c9236 !important;
+}
