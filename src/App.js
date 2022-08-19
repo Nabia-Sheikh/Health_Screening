@@ -11,6 +11,8 @@ import "./styles/App.css"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { AuthContext } from "./utils/context"
 import ChatScreen from "./Screens/ChatScreen"
+import ScreeningScreen from "./Screens/ScreeningScreen"
+import ResultScreen from "./Screens/ResultScreen"
 
 const App = () => {
   const isAuthenticated = useContext(AuthContext).isAuthenticated
@@ -20,6 +22,8 @@ const App = () => {
         {isAuthenticated ? <AuthNav /> : <NavBar />}
         <Routes>
           <Route path="/" element={<HomeScreen />} />
+          <Route path="/screening" element={<ScreeningScreen />} />
+          <Route path="/result" element={<ResultScreen />} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/history" element={<ResultHistory />} />

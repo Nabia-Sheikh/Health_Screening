@@ -3,6 +3,7 @@ import { axiosPrivate } from "../../utils/axios"
 import { format } from "timeago.js"
 import { io } from "socket.io-client"
 import { AuthContext } from "../../utils/context"
+import { BASE_URL } from "../../utils/constants"
 
 const ChatBox = ({
   activeConversation,
@@ -84,7 +85,7 @@ const ChatBox = ({
 
   // Socket IO Work
   useEffect(() => {
-    socket.current = io("http://localhost:4000")
+    socket.current = io(BASE_URL)
     socket.current.on("getMessage", (data) => {
       getMessages()
       console.log("MESSAGGE RECEIVED", data)

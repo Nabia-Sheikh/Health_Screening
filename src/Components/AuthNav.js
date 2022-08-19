@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 import { AuthContext } from "../utils/context"
 
 function AuthNav() {
-  const {signOut : logout, user} = useContext(AuthContext)
+  const { signOut: logout, user } = useContext(AuthContext)
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
@@ -26,7 +26,7 @@ function AuthNav() {
             </Nav.Link>
             {user?.role === "patient" && (
               <>
-                <Nav.Link as={Link} to="/">
+                <Nav.Link as={Link} to="/screening">
                   Screening
                 </Nav.Link>
                 <Nav.Link as={Link} to="/history">

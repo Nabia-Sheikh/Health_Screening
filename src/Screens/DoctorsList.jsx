@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Container, Button, Card } from "react-bootstrap"
+import { Container, Button, Card, Modal } from "react-bootstrap"
 import Image from "react-bootstrap/Image"
 import { BASE_URL } from "../utils/constants"
 import axios from "axios"
@@ -8,8 +8,17 @@ import { useNavigate } from "react-router-dom"
 
 const DoctorsList = () => {
   const [doctors, setDoctors] = useState([])
+  const [show, setShow] = useState(false)
+
   const user = useContext(AuthContext).user
   const navigate = useNavigate()
+
+  const handleClose = () => {
+    setShow(false)
+  }
+  const handleShow = () => {
+    setShow(true)
+  }
 
   const getDoctors = async () => {
     try {
@@ -111,7 +120,12 @@ const DoctorsList = () => {
               >
                 Chat
               </Button>
-              <Button variant="outline-primary" className="px-5" size="sm">
+              <Button
+                variant="outline-primary"
+                className="px-5"
+                size="sm"
+                onClick={setShow}
+              >
                 Send History
               </Button>
             </Card.Body>
@@ -119,37 +133,15 @@ const DoctorsList = () => {
         ))}
       </div>
 
-      {/* <div className="table-responsive">
-        <table className="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Score</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>01/01/2020</td>
-              <td>90</td>
-              <td>
-                <Button variant="outline-primary" size="sm">
-                  View
-                </Button>
-              </td>
-            </tr>
-            <tr>
-              <td>01/01/2020</td>
-              <td>90</td>
-              <td>
-                <Button variant="outline-primary" size="sm">
-                  View
-                </Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div> */}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Email Sent</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Your screening History has sent to the doctor. Please wait for the
+          doctor to contact you.
+        </Modal.Body>
+      </Modal>
     </Container>
   )
 }
