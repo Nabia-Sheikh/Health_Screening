@@ -1,32 +1,63 @@
-import React from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Container, Button, Card } from "react-bootstrap"
 import Image from "react-bootstrap/Image"
-
-const results = [
-  {
-    date: "01/01/2020",
-    health: "90",
-    summary: "Moderate State",
-  },
-  {
-    date: "01/01/2020",
-    health: "30",
-    summary: "Danger",
-  },
-  {
-    date: "01/01/2020",
-    health: "50",
-    summary: "Severe State",
-  },
-]
+import { BASE_URL } from "../utils/constants"
+import axios from "axios"
+import { AuthContext } from "../utils/context"
+import { useNavigate } from "react-router-dom"
 
 const DoctorsList = () => {
+  const [doctors, setDoctors] = useState([])
+  const user = useContext(AuthContext).user
+  const navigate = useNavigate()
+
+  const getDoctors = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/user/doctors`)
+      setDoctors(response.data.result)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getDoctors()
+  }, [])
+
+  // Handle chat with doctor
+  const handleChat = async (doctor) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/conversations/`, {
+        senderId: user._id,
+        receiverId: doctor._id,
+      })
+      if (response.data.msg === "Conversation already exists") {
+        const convo = response.data.result
+        return navigate("/chats", {
+          state: {
+            conversation: convo,
+            doctor: doctor,
+          },
+        })
+      }
+      const convoID = response.data._id
+      navigate("/chats", {
+        state: {
+          conversation: convoID,
+          doctor: doctor,
+        },
+      })
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <Container className="my-4">
       <h3>Doctor's List</h3>
 
       <div>
-        {results.map((result) => (
+        {doctors.map((doctor) => (
           <Card className="my-4">
             <Card.Body>
               <div className="d-flex  align-items-center">
@@ -40,16 +71,22 @@ const DoctorsList = () => {
                 />
                 <div className="flex-grow-1">
                   <h6>
-                    Dr. John Doe
+                    Dr. {doctor?.name}
                     <br />
-                    <span className="text-muted">MD, PhD</span>
+                    <span className="text-muted">{doctor?.qualification}</span>
                   </h6>
                 </div>
               </div>
 
               <h6 className="ms-1 my-2">
                 <span className="font-weight-bold me-2">Experience:</span>
-                <span className="text-muted">5 years</span>
+                <span className="text-muted">
+                  {doctor?.experience
+                    ? doctor?.experience > 1
+                      ? doctor?.experience + " years"
+                      : doctor?.experience + " year"
+                    : "N/A"}
+                </span>
               </h6>
 
               <div className="d-flex  align-items-center">
@@ -66,8 +103,16 @@ const DoctorsList = () => {
                   </span>
                 </div>
               </div>
+              <Button
+                variant="outline-primary"
+                className="px-5 me-3"
+                size="sm"
+                onClick={() => handleChat(doctor)}
+              >
+                Chat
+              </Button>
               <Button variant="outline-primary" className="px-5" size="sm">
-                Send Email
+                Send History
               </Button>
             </Card.Body>
           </Card>

@@ -7,17 +7,15 @@ import RegisterScreen from "./Screens/RegisterScreen"
 import LoginScreen from "./Screens/LoginScreen"
 import ResultHistory from "./Screens/ResultHistory"
 import "./styles/App.css"
-import { ChatProvider } from "./utils/ChatProvider"
-
 
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { AuthContext } from "./utils/context"
+import ChatScreen from "./Screens/ChatScreen"
 
 const App = () => {
   const isAuthenticated = useContext(AuthContext).isAuthenticated
   return (
     <div className="main">
-      <ChatProvider>
       <BrowserRouter>
         {isAuthenticated ? <AuthNav /> : <NavBar />}
         <Routes>
@@ -25,10 +23,10 @@ const App = () => {
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/history" element={<ResultHistory />} />
+          <Route path="/chats" element={<ChatScreen />} />
           <Route path="/doctors" element={<DoctorsList />} />
         </Routes>
-        </BrowserRouter>
-      </ChatProvider>
+      </BrowserRouter>
     </div>
   )
 }

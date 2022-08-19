@@ -12,6 +12,8 @@ const RegisterScreen = () => {
     password: "",
     confirmPassword: "",
     role: "",
+    qualification: "",
+    experience: "",
   })
   const signIn = useContext(AuthContext).signIn
 
@@ -51,13 +53,25 @@ const RegisterScreen = () => {
       return alert("Role is required")
     }
 
+    if (user.role === "doctor") {
+      if (!user.qualification) {
+        return alert("Qualification is required")
+      }
+      if (!user.experience) {
+        return alert("Experience is required")
+      }
+    }
+    const body = {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      role: user.role,
+      qualification: user.qualification,
+      experience: user.experience,
+    }
+
     try {
-      const { data } = await axios.post(BASE_URL + "/user/register", {
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        role: user.role,
-      })
+      const { data } = await axios.post(BASE_URL + "/user/register", body)
       if (data.msg === "Already Registered") {
         alert("Already Registered. Please login")
         return navigate("/login")
@@ -168,7 +182,39 @@ const RegisterScreen = () => {
                   Doctor
                 </label>
               </div>
+              {user.role === "doctor" && (
+                <>
+                  <div className="form-group py-2">
+                    <label htmlFor="nameInput " className="py-2">
+                      Qualification
+                    </label>
+                    <input
+                      type="text"
+                      name="qualification"
+                      value={user.qualification}
+                      onChange={handleChange}
+                      className="form-control"
+                      id="nameInput"
+                      placeholder=" Qualification"
+                    />
+                  </div>
 
+                  <div className="form-group py-2">
+                    <label htmlFor="nameInput " className="py-2">
+                      Experience
+                    </label>
+                    <input
+                      type="number"
+                      name="experience"
+                      value={user.experience}
+                      onChange={handleChange}
+                      className="form-control"
+                      id="nameInput"
+                      placeholder="Experience in years"
+                    />
+                  </div>
+                </>
+              )}
               <div className="d-grid gap-2 py-2">
                 <button className="btn btn-primary" type="submit">
                   Register
